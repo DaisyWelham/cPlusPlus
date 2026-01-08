@@ -16,6 +16,15 @@ public:
         return(*it);
     }
 
+    // Like choice, but without replacement.
+    template<typename T>
+    vector<T> sample(const vector<T>& xs, size_t k) {
+        assert(k <= xs.size());
+        vector<T> copy = xs;
+        shuffle(copy);
+        return(vector<T>(copy.begin(), copy.begin() + k));
+    }
+
     // uniform(a, b) for doubles (Python-style)
     double uniform(double a, double b) {
         std::uniform_real_distribution<double> dist(a, b);
@@ -23,10 +32,23 @@ public:
     }
 
     // uniform(a, b) for ints (inclusive, like Python)
-    int uniform(int a, int b) {
+    int randint(int a, int b) {
         std::uniform_int_distribution<int> dist(a, b);
         return(dist(gen));
     }
+
+    // Gives a gaussian/normal about mean with standard deviation STD
+    double gauss(double mean = 0.0, double STD = 1.0) {
+        std::normal_distribution<double> dist(mean, STD);
+        return(dist(gen));
+    }
+
+    // Shuffle
+    template<typename T>
+    void shuffle(vector<T>& xs) {
+        std::shuffle(xs.begin(), xs.end(), gen);
+    }
+
 
 private:
     std::mt19937 gen{std::random_device{}()};
